@@ -1,6 +1,9 @@
-﻿namespace SmartTrip.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartTrip.API.Models;
 
 public class HistoricoDePasseioDoUsuario {
+    [Key]
     public int HistoricoId { get; set; }
     public int UsuarioId { get; set; }
     public int PasseioId { get; set; }

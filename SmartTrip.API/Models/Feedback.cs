@@ -1,6 +1,9 @@
-﻿namespace SmartTrip.API.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartTrip.API.Models;
 
 public class Feedback {
+    [Key]
     public int FeedbackId { get; set; }
     public int UsuarioId { get; set; }
     public string Descricao { get; set; } = string.Empty;
