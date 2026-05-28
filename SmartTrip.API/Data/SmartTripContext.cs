@@ -49,6 +49,8 @@ public class SmartTripContext : DbContext {
             e.Property(p => p.Preco).HasColumnName("preco");
             e.Property(p => p.DuracaoHoras).HasColumnName("duracao_horas");
             e.Property(p => p.Ativo).HasColumnName("ativo");
+            e.Property(p => p.Latitude).HasColumnName("latitude");
+            e.Property(p => p.Longitude).HasColumnName("longitude");
             e.HasOne(p => p.Tipo)
                 .WithMany(t => t.Passeios)
                 .HasForeignKey(p => p.TipoId);

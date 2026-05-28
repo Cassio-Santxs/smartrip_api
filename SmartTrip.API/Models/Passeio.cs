@@ -12,6 +12,8 @@ public class Passeio {
     public decimal? Preco { get; set; }
     public int? DuracaoHoras { get; set; }
     public bool Ativo { get; set; } = true;
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
 
     public TipoDePasseio? Tipo { get; set; }
     public ICollection<HistoricoDePasseioDoUsuario>? Historicos { get; set; }
