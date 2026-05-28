@@ -67,4 +67,57 @@ public class UsuarioController : ControllerBase {
 
         return Ok(new { mensagem = "Login realizado com sucesso.", usuarioId = usuario.UsuarioId, nome = usuario.Nome });
     }
+
+    // PUT: api/usuario/1
+    [HttpPut("{id}")]
+    public async Task<IActionResult> AtualizarUsuario(int id, [FromBody] Usuario usuarioDadosAtualizados)
+    {
+        if (id != usuarioDadosAtualizados.UsuarioId) {
+            return BadRequest(new { mensagem = "O ID fornecido na URL não coincide com o ID do usuário enviado." });
+        }
+
+        var usuarioExistente = await _context.Usuarios.FindAsync(id);
+        if (usuarioExistente == null) {
+            return NotFound(new { mensagem = "Usuário não encontrado." });
+        }
+
+        var emailJaExiste = await _context.Usuarios
+            .AnyAsync(u => u.Email == usuarioDadosAtualizados.Email && u.UsuarioId != id);
+
+        if (emailJaExiste) {
+            return BadRequest(new { mensagem = "Este e-mail já está sendo utilizado por outra conta." });
+        }
+
+        usuarioExistente.Nome = usuarioDadosAtualizados.Nome;
+        usuarioExistente.Email = usuarioDadosAtualizados.Email;
+
+        if (!string.IsNullOrWhiteSpace(usuarioDadosAtualizados.Senha)) {
+            usuarioExistente.Senha = usuarioDadosAtualizados.Senha;
+        }
+
+        try {
+            _context.Usuarios.Update(usuarioExistente);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException) {
+            if (!UsuarioExiste(id)) {
+                return NotFound();
+            }
+            else {
+                throw;
+            }
+        }
+
+        return Ok(new
+        {
+            id = usuarioExistente.UsuarioId,
+            nome = usuarioExistente.Nome,
+            email = usuarioExistente.Email
+        });
+    }
+
+    private bool UsuarioExiste(int id)
+    {
+        return _context.Usuarios.Any(e => e.UsuarioId == id);
+    }
 }
